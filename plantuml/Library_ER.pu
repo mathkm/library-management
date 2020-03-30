@@ -1,0 +1,128 @@
+@startuml
+
+' hide the spot
+hide circle
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+title 図書管理
+entity "Administrator" as admin {
+    * **id** **<<PK>>** : BIGINT AUTO_INCREMENT
+    --
+    * admin_id 
+     VARCHAR(128) NOT NULL
+     UNIQUE
+     INDEX idx_user_id
+    * password
+     VARCHAR(256) NOT NULL
+    * owner_flag
+     BOOLEAN NOT NULL
+     DEFAULT FALSE
+    * disabled_flag
+     BOOLEAN NOT NULL
+     DEFAULT FALSE
+    * created_date 
+     DATETIME NOT NULL
+     DEFAULT CURRENT_TIMESTAMP
+    * updated_date
+     DATETIME DEFAULT NULL
+     ON UPDATE CURRENT_TIMESTAMP
+}
+
+entity "Customer" as customer {
+    * **id** **<<PK>>** 
+     BIGINT AUTO_INCREMENT
+    --
+    * admin_id **<<FK>>**
+     VARCHAR(256) NOT NULL
+    --
+    * name
+     VARCHAR(256) NOT NULL
+     INDEX idx_name
+    * birthday
+     DATE NOT NULL
+     INDEX idx_birth
+    * telephone
+     BIGINT NOT NULL
+     INDEX idx_tel
+    * pref 
+     VARCHAR(256) NOT NULL
+    * city
+     VARCHAR(256) NOT NULL
+    * address
+     VARCHAR(256) NOT NULL
+    * disabled_flag
+     BOOLEAN NOT NULL
+     DEFAULT FALSE
+    * created_date
+     DATETIME NOT NULL
+     DEFAULT CURRENT_TIMESTAMP
+    * updated_date
+    DATETIME DEFAULT NULL
+    ON UPDATE CURRENT_TIMESTAMP
+}
+
+entity "Book" as book {
+    * **id** **<<PK>>**
+     BIGINT AUTO_INCREMENT
+    --
+    * isbn 
+     VARCHAR(128) NOT NULL
+     UNIQUE
+    * created_date
+     DATETIME NOT NULL
+     DEFAULT CURRENT_TIMESTAMP
+    * updated_date 
+     DATETIME DEFAULT NULL
+     ON UPDATE CURRENT_TIMESTAMP
+}
+
+entity "BookDetail" as bookDetail {
+    * **id** **<<PK>>**
+     BIGINT AUTO_INCREMENT
+    --
+    * isbn **<<FK>>**
+     VARCHAR(128) NOT NULL UNIQUE
+    --
+    * detail
+     BLOB DEFAULT NULL
+    * published_date
+     DATE DEFAULT NULL
+    * created_date
+     DATETIME NOT NULL
+     DEFAULT CURRENT_TIMESTAMP
+    * updated_date
+     DATETIME
+     DEFAULT NULL
+     ON UPDATE CURRENT_TIMESTAMP
+}
+
+entity "BookStatus" as bookStatus {
+    * **id** **<<PK>>**
+     BIGINT AUTO_INCREMENT
+    --
+    * isbn **<<FK>>**
+     VARCHAR(128) NOT NULL
+     UNIQUE
+    * renting_customer_id **<<FK for Customer.id>>**
+     BIGINT
+     DEFAULT NULL
+    --
+    * status
+     ENUM('Available','Lending','Unavailable')
+     NOT NULL DEFAULT Available
+    * created_date
+     DATETIME NOT NULL
+     DEFAULT CURRENT_TIMESTAMP
+    * updated_date 
+     DATETIME
+     DEFAULT NULL
+     ON UPDATE CURRENT_TIMESTAMP
+}
+
+admin ..o{ customer
+customer ..o{ bookStatus
+book ..|| bookDetail
+book ..|| bookStatus
+
+@enduml
