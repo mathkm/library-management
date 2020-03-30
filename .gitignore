@@ -30,3 +30,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### MySQL log file in localenv
+/localenv/log/mysql/
