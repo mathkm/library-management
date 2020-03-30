@@ -1,0 +1,13 @@
+spring:
+ datasource:
+  driver-class-name: com.mysql.cj.jdbc.Driver
+  url: jdbc:mysql://localhost:3314/library
+  username: root
+  password: rootpassword
+ flyway:
+  baseline-version: 1.0.0
+  baseline-on-migrate: true
+
+mybatis:
+ configuration:
+  map-underscore-to-camel-case: true
